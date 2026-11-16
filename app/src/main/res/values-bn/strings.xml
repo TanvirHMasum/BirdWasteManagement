@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">বার্ড বর্জ্য ব্যবস্থাপনা</string>
+
+    <!-- Dashboard/Navigation -->
+    <string name="home">হোম</string>
+    <string name="reports">রিপোর্ট</string>
+    <string name="profile">প্রোফাইল</string>
+    <string name="settings">সেটিংস</string>
+    <string name="language">ভাষা</string>
+
+    <!-- Dashboard Stats -->
+    <string name="total_active_customers">মোট সক্রিয় গ্রাহক</string>
+    <string name="monthly_collection">মাসিক সংগ্রহ</string>
+    <string name="due_amount">বকেয়া পরিমাণ</string>
+
+    <!-- Dashboard Lists -->
+    <string name="active_municipalities">সক্রিয় পৌরসভা</string>
+    <string name="recent_customers">সাম্প্রতিক গ্রাহক</string>
+    <string name="paid">পরিশোধিত</string>
+    <string name="customers">গ্রাহক</string>
+    <string name="collection_rate">সংগ্রহের হার</string>
+    <string name="view_details">বিস্তারিত দেখুন</string>
+
+    <!-- Dialogs -->
+    <string name="select_language">ভাষা নির্বাচন করুন</string>
+    <string name="english">English</string>
+    <string name="bangla">বাংলা (Bangla)</string>
+    <string name="close">বন্ধ করুন</string>
+
+    <!-- Login -->
+    <string name="login_to_your_account">আপনার অ্যাকাউন্টে লগইন করুন</string>
+    <string name="username">ব্যবহারকারীর নাম</string>
+    <string name="password">পাসওয়ার্ড</string>
+    <string name="remember_me">আমাকে মনে রাখুন</string>
+    <string name="forgot_password">পাসওয়ার্ড ভুলে গেছেন?</string>
+    <string name="login">লগইন</string>
+    <string name="login_as_guest">গেস্ট হিসেবে লগইন করুন</string>
+
+    <!-- Profile -->
+    <string name="my_bills">আমার বিল</string>
+    <string name="payment_history">পেমেন্ট ইতিহাস</string>
+    <string name="eco_tips">ইকো টিপস</string>
+    <string name="logout">লগআউট</string>
+    <string name="customer_id">গ্রাহক আইডি: %1$s</string>
+
+    <!-- Registration -->
+    <string name="register">নিবন্ধন করুন</string>
+    <string name="dont_have_account">অ্যাকাউন্ট নেই? সাইন আপ করুন</string>
+    <string name="customer_registration">গ্রাহক নিবন্ধন</string>
+    <string name="personal_info">ব্যক্তিগত তথ্য</string>
+    <string name="address_service_info">ঠিকানা ও সেবার তথ্য</string>
+    <string name="customer_name">গ্রাহকের নাম *</string>
+    <string name="father_husband_name">পিতা/স্বামীর নাম *</string>
+    <string name="mobile_number">মোবাইল নম্বর *</string>
+    <string name="nid_number">জাতীয় পরিচয়পত্র নম্বর *</string>
+    <string name="email_optional">ইমেইল (ঐচ্ছিক)</string>
+    <string name="gender">লিঙ্গ নির্বাচন করুন *</string>
+    <string name="dob">জন্ম তারিখ</string>
+    <string name="division">বিভাগ *</string>
+    <string name="district">জেলা *</string>
+    <string name="upazila">উপজেলা *</string>
+    <string name="municipality">পৌরসভা *</string>
+    <string name="ward">ওয়ার্ড *</string>
+    <string name="mahalla_village">মহল্লা/গ্রাম *</string>
+    <string name="holding_number">হোল্ডিং নম্বর *</string>
+    <string name="road_number">রাস্তা নম্বর</string>
+    <string name="detailed_address">বিস্তারিত ঠিকানা</string>
+    <string name="service_type">সেবার ধরন ও মাসিক বিল *</string>
+    <string name="password_hint">পাসওয়ার্ড (অন্তত ৬ অক্ষর) *</string>
+    <string name="retype_password">পাসওয়ার্ড আবার লিখুন *</string>
+    <string name="declaration">আমি ঘোষণা করছি যে উপরের সকল তথ্য সত্য ও নির্ভুল। *</string>
+    <string name="submit_application">আবেদন জমা দিন</string>
+</resources>

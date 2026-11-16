@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Bird Waste Management</string>
+
+    <!-- Dashboard/Navigation -->
+    <string name="home">Home</string>
+    <string name="reports">Reports</string>
+    <string name="profile">Profile</string>
+    <string name="settings">Settings</string>
+    <string name="language">Language</string>
+
+    <!-- Dashboard Stats -->
+    <string name="total_active_customers">Total Active Customers</string>
+    <string name="monthly_collection">Monthly Collection</string>
+    <string name="due_amount">Due Amount</string>
+
+    <!-- Dashboard Lists -->
+    <string name="active_municipalities">Active Municipalities</string>
+    <string name="recent_customers">Recent Customers</string>
+    <string name="paid">Paid</string>
+    <string name="customers">Customers</string>
+    <string name="collection_rate">Collection Rate</string>
+    <string name="view_details">View Details</string>
+
+    <!-- Dialogs -->
+    <string name="select_language">Select Language</string>
+    <string name="english">English</string>
+    <string name="bangla">বাংলা (Bangla)</string>
+    <string name="close">Close</string>
+
+    <!-- Login -->
+    <string name="login_to_your_account">Login to Your Account</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">Login</string>
+    <string name="login_as_guest">Login as Guest</string>
+
+    <!-- Profile -->
+    <string name="my_bills">My Bills</string>
+    <string name="payment_history">Payment History</string>
+    <string name="eco_tips">Eco Tips</string>
+    <string name="logout">Logout</string>
+    <string name="customer_id">Customer ID: %1$s</string>
+
+    <!-- Registration -->
+    <string name="register">Register</string>
+    <string name="dont_have_account">Don\'t have an account? Sign Up</string>
+    <string name="customer_registration">Customer Registration</string>
+    <string name="personal_info">Personal Information</string>
+    <string name="address_service_info">Address &amp; Service Information</string>
+    <string name="customer_name">Customer Name *</string>
+    <string name="father_husband_name">Father/Husband\'s Name *</string>
+    <string name="mobile_number">Mobile Number *</string>
+    <string name="nid_number">National ID Number *</string>
+    <string name="email_optional">Email (Optional)</string>
+    <string name="gender">Gender *</string>
+    <string name="dob">Date of Birth</string>
+    <string name="division">Division *</string>
+    <string name="district">District *</string>
+    <string name="upazila">Upazila *</string>
+    <string name="municipality">Municipality *</string>
+    <string name="ward">Ward *</string>
+    <string name="mahalla_village">Mahalla/Village *</string>
+    <string name="holding_number">Holding Number *</string>
+    <string name="road_number">Road Number</string>
+    <string name="detailed_address">Detailed Address</string>
+    <string name="service_type">Service Type &amp; Monthly Bill *</string>
+    <string name="password_hint">Password (min 6 chars) *</string>
+    <string name="retype_password">Retype Password *</string>
+    <string name="declaration">I declare that all the above information is true and accurate. *</string>
+    <string name="submit_application">Submit Application</string>
+</resources>
