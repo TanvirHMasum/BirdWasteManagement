@@ -45,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -100,6 +101,7 @@ fun LoginScreen(
     var rememberMe by remember { mutableStateOf(true) }
     var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val snackbarHostState = LocalSnackbarHostState.current
     val scope = rememberCoroutineScope()
 
@@ -173,6 +175,7 @@ fun LoginScreen(
                 value = username,
                 onValueChange = { username = it },
                 placeholder = { Text(stringResource(R.string.phone_no)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Person,
@@ -262,6 +265,7 @@ fun LoginScreen(
             // Login Button
             Button(
                 onClick = { 
+                    keyboardController?.hide()
                     if (com.birdwastemanagement.app.utils.NetworkUtils.isNetworkAvailable(context)) {
                         viewModel.login(username, password)
                     } else {
