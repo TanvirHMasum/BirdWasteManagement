@@ -47,7 +47,7 @@
 
     <!-- Registration -->
     <string name="register">নিবন্ধন করুন</string>
-    <string name="dont_have_account">অ্যাকাউন্ট নেই? সাইন আপ করুন</string>
+    <string name="dont_have_account">অ্যাকাউন্ট নেই? নিবন্ধন করুন</string>
     <string name="customer_registration">গ্রাহক নিবন্ধন</string>
     <string name="personal_info">ব্যক্তিগত তথ্য</string>
     <string name="address_service_info">ঠিকানা ও সেবার তথ্য</string>
@@ -70,6 +70,18 @@
     <string name="service_type">সেবার ধরন ও মাসিক বিল *</string>
     <string name="password_hint">পাসওয়ার্ড (অন্তত ৬ অক্ষর) *</string>
     <string name="retype_password">পাসওয়ার্ড আবার লিখুন *</string>
+    <string name="security_declaration">নিরাপত্তা ও ঘোষণা</string>
     <string name="declaration">আমি ঘোষণা করছি যে উপরের সকল তথ্য সত্য ও নির্ভুল। *</string>
     <string name="submit_application">আবেদন জমা দিন</string>
+
+    <!-- OTP Verification -->
+    <string name="success">সফল</string>
+    <string name="otp_verification">ওটিপি যাচাইকরণ</string>
+    <string name="enter_otp">ওটিপি লিখুন</string>
+    <string name="otp_sent_to">%1$s নম্বরে একটি ৬-সংখ্যার কোড পাঠানো হয়েছে</string>
+    <string name="six_digit_otp">৬-সংখ্যার ওটিপি</string>
+    <string name="verify_otp">ওটিপি যাচাই করুন</string>
+    <string name="resend_code_in">পুনরায় কোড পাঠাতে সময় লাগবে %1$s:%2$s</string>
+    <string name="resend_otp">পুনরায় ওটিপি পাঠান</string>
+    <string name="no_internet">কোনো ইন্টারনেট সংযোগ নেই। দয়া করে ইন্টারনেটে সংযুক্ত হয়ে আবার চেষ্টা করুন।</string>
 </resources>

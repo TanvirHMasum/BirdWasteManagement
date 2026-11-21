@@ -60,11 +60,4 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
-    fun guestLogin() {
-        viewModelScope.launch {
-            userPreferences.setLoggedIn(true)
-            _loginState.value = UiState.Success(true)
-        }
-    }
 }

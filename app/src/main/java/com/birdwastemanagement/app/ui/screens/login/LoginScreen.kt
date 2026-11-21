@@ -303,19 +303,6 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Login as Guest
-            TextButton(onClick = { viewModel.guestLogin() }) {
-                Icon(Icons.Default.Person, contentDescription = null, tint = DeepForestGreen)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(R.string.login_as_guest),
-                    color = DeepForestGreen,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             // Registration Button
             TextButton(onClick = onNavigateToRegistration) {
                 Text(

@@ -14,7 +14,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.birdwastemanagement.app.ui.theme.DeepForestGreen
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.birdwastemanagement.app.R
 import com.birdwastemanagement.app.domain.model.UiState
 import com.birdwastemanagement.app.ui.utils.LocalSnackbarHostState
 import kotlinx.coroutines.launch
@@ -59,7 +61,7 @@ fun OtpScreen(
             onDismissRequest = { showDialog = false },
             title = { 
                 Text(
-                    text = "Success",
+                    text = stringResource(R.string.success),
                     color = DeepForestGreen,
                     fontWeight = FontWeight.Bold
                 ) 
@@ -88,7 +90,7 @@ fun OtpScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("OTP Verification", color = Color.White) },
+                title = { Text(stringResource(R.string.otp_verification), color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -115,7 +117,7 @@ fun OtpScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "Enter OTP",
+                text = stringResource(R.string.enter_otp),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = DeepForestGreen
@@ -124,7 +126,7 @@ fun OtpScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "A 6-digit code has been sent to $phone",
+                text = stringResource(R.string.otp_sent_to, phone),
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray
             )
@@ -134,7 +136,7 @@ fun OtpScreen(
             OutlinedTextField(
                 value = otpCode,
                 onValueChange = { if (it.length <= 6) otpCode = it },
-                label = { Text("6-Digit OTP") },
+                label = { Text(stringResource(R.string.six_digit_otp)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
                 shape = RoundedCornerShape(8.dp),
@@ -152,7 +154,7 @@ fun OtpScreen(
                         viewModel.verifyOtp(phone, otpCode)
                     } else {
                         scope.launch {
-                            snackbarHostState.showSnackbar("[ERROR]No internet connection. Please connect to the internet and try again.")
+                            snackbarHostState.showSnackbar("[ERROR]${context.getString(R.string.no_internet)}")
                         }
                     }
                 },
@@ -166,7 +168,7 @@ fun OtpScreen(
                 if (verifyState is UiState.Loading) {
                     CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
                 } else {
-                    Text(text = "Verify OTP", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(R.string.verify_otp), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 }
             }
 
@@ -174,7 +176,11 @@ fun OtpScreen(
 
             if (timeLeft > 0) {
                 Text(
-                    text = "Resend code in ${timeLeft / 60}:${(timeLeft % 60).toString().padStart(2, '0')}",
+                    text = stringResource(
+                        R.string.resend_code_in,
+                        (timeLeft / 60).toString(),
+                        (timeLeft % 60).toString().padStart(2, '0')
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
@@ -186,7 +192,7 @@ fun OtpScreen(
                             timeLeft = 120
                         } else {
                             scope.launch {
-                                snackbarHostState.showSnackbar("[ERROR]No internet connection. Please connect to the internet and try again.")
+                                snackbarHostState.showSnackbar("[ERROR]${context.getString(R.string.no_internet)}")
                             }
                         }
                     },
@@ -195,7 +201,7 @@ fun OtpScreen(
                     if (resendState is UiState.Loading) {
                         CircularProgressIndicator(color = DeepForestGreen, modifier = Modifier.size(24.dp))
                     } else {
-                        Text("Resend OTP", color = DeepForestGreen, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.resend_otp), color = DeepForestGreen, fontWeight = FontWeight.Bold)
                     }
                 }
             }

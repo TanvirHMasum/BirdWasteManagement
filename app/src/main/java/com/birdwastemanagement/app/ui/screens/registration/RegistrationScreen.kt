@@ -288,7 +288,7 @@ fun RegistrationScreen(
 
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                SectionTitle(title = "Security & Declaration")
+                SectionTitle(title = stringResource(R.string.security_declaration))
             }
 
             item { RegistrationPasswordField(value = password, onValueChange = { password = it }, label = stringResource(R.string.password_hint)) }

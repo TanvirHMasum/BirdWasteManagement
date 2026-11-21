@@ -47,7 +47,7 @@
 
     <!-- Registration -->
     <string name="register">Register</string>
-    <string name="dont_have_account">Don\'t have an account? Sign Up</string>
+    <string name="dont_have_account">Don\'t have an account? Register</string>
     <string name="customer_registration">Customer Registration</string>
     <string name="personal_info">Personal Information</string>
     <string name="address_service_info">Address &amp; Service Information</string>
@@ -70,6 +70,18 @@
     <string name="service_type">Service Type &amp; Monthly Bill *</string>
     <string name="password_hint">Password (min 6 chars) *</string>
     <string name="retype_password">Retype Password *</string>
+    <string name="security_declaration">Security &amp; Declaration</string>
     <string name="declaration">I declare that all the above information is true and accurate. *</string>
     <string name="submit_application">Submit Application</string>
+
+    <!-- OTP Verification -->
+    <string name="success">Success</string>
+    <string name="otp_verification">OTP Verification</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="otp_sent_to">A 6-digit code has been sent to %1$s</string>
+    <string name="six_digit_otp">6-Digit OTP</string>
+    <string name="verify_otp">Verify OTP</string>
+    <string name="resend_code_in">Resend code in %1$s:%2$s</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="no_internet">No internet connection. Please connect to the internet and try again.</string>
 </resources>

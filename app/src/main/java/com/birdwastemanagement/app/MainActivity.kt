@@ -22,10 +22,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.birdwastemanagement.app.ui.utils.LocalSnackbarHostState
 
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Set Bangla as the default language if no preference is set yet
+        if (AppCompatDelegate.getApplicationLocales().isEmpty) {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("bn"))
+        }
+
         setContent {
             BirdWasteManagementTheme {
                 val snackbarHostState = remember { SnackbarHostState() }
