@@ -39,10 +39,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -56,18 +58,50 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.birdwastemanagement.app.R
 import com.birdwastemanagement.app.domain.model.UiState
 import com.birdwastemanagement.app.ui.theme.DeepForestGreen
+import com.birdwastemanagement.app.ui.utils.LocalSnackbarHostState
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
+    message: String? = null,
     onLoginSuccess: () -> Unit,
     onNavigateToRegistration: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
-    var username by remember { mutableStateOf("admin") }
-    var password by remember { mutableStateOf("password123") }
+    var showDialog by remember { mutableStateOf(message != null) }
+
+    if (showDialog && message != null) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { 
+                Text(
+                    text = "Success",
+                    color = DeepForestGreen,
+                    fontWeight = FontWeight.Bold
+                ) 
+            },
+            text = { 
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodyMedium
+                ) 
+            },
+            confirmButton = {
+                androidx.compose.material3.TextButton(onClick = { showDialog = false }) {
+                    Text("OK", color = DeepForestGreen, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                }
+            }
+        )
+    }
+
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(true) }
     var passwordVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
 
     val loginState by viewModel.loginState.collectAsState()
 
@@ -138,7 +172,7 @@ fun LoginScreen(
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
-                placeholder = { Text(stringResource(R.string.username)) },
+                placeholder = { Text(stringResource(R.string.phone_no)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Person,
@@ -227,7 +261,15 @@ fun LoginScreen(
 
             // Login Button
             Button(
-                onClick = { viewModel.login(username, password) },
+                onClick = { 
+                    if (com.birdwastemanagement.app.utils.NetworkUtils.isNetworkAvailable(context)) {
+                        viewModel.login(username, password)
+                    } else {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("No internet connection. Please connect to the internet and try again.")
+                        }
+                    }
+                },
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = DeepForestGreen),
                 enabled = loginState !is UiState.Loading,

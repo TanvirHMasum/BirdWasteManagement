@@ -20,14 +20,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class RegistrationResult(val phone: String, val message: String)
+
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
     private val locationApi: LocationApi,
     private val authApi: AuthApi
 ) : ViewModel() {
 
-    private val _registrationState = MutableStateFlow<UiState<String>>(UiState.Success(""))
-    val registrationState: StateFlow<UiState<String>> = _registrationState.asStateFlow()
+    private val _registrationState = MutableStateFlow<UiState<RegistrationResult>>(UiState.Success(RegistrationResult("", "")))
+    val registrationState: StateFlow<UiState<RegistrationResult>> = _registrationState.asStateFlow()
 
     private val _divisions = MutableStateFlow<List<DivisionDto>>(emptyList())
     val divisions: StateFlow<List<DivisionDto>> = _divisions.asStateFlow()
@@ -187,12 +189,32 @@ class RegistrationViewModel @Inject constructor(
             try {
                 val response = authApi.register(request)
                 if (response.isSuccessful && response.body() != null) {
-                    _registrationState.value = UiState.Success(request.phone)
+                    val body = response.body()!!
+                    _registrationState.value = UiState.Success(
+                        RegistrationResult(
+                            phone = body.data?.phone ?: request.phone,
+                            message = body.message ?: "Registration successful"
+                        )
+                    )
                 } else {
                     // Try to parse the error message
                     val errorBody = response.errorBody()?.string()
-                    _registrationState.value = UiState.Error(errorBody ?: "Registration failed")
+                    val errorMessage = try {
+                        if (errorBody != null) {
+                            val parsedError = com.google.gson.Gson().fromJson(errorBody, com.birdwastemanagement.app.data.remote.dto.ErrorResponse::class.java)
+                            parsedError.message ?: "Registration failed"
+                        } else {
+                            "Registration failed"
+                        }
+                    } catch (e: Exception) {
+                        "Registration failed"
+                    }
+                    _registrationState.value = UiState.Error(errorMessage)
                 }
+            } catch (e: java.net.UnknownHostException) {
+                _registrationState.value = UiState.Error("No internet connection. Please connect to the internet and try again.")
+            } catch (e: java.net.ConnectException) {
+                _registrationState.value = UiState.Error("No internet connection. Please connect to the internet and try again.")
             } catch (e: Exception) {
                 _registrationState.value = UiState.Error(e.localizedMessage ?: "Network Error")
             }

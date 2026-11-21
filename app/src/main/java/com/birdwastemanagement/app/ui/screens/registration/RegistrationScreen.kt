@@ -44,6 +44,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.size
@@ -56,12 +57,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import com.birdwastemanagement.app.R
 import com.birdwastemanagement.app.data.remote.dto.RegisterRequest
 import com.birdwastemanagement.app.domain.model.UiState
+import com.birdwastemanagement.app.ui.screens.registration.RegistrationResult
 import com.birdwastemanagement.app.ui.theme.DeepForestGreen
+import com.birdwastemanagement.app.ui.utils.LocalSnackbarHostState
 import com.birdwastemanagement.app.utils.localizeDigits
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -71,14 +77,24 @@ import java.util.Locale
 @Composable
 fun RegistrationScreen(
     onBackClick: () -> Unit,
-    onNavigateToOtp: (String) -> Unit,
+    onNavigateToOtp: (String, String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegistrationViewModel = hiltViewModel()
 ) {
     val registrationState by viewModel.registrationState.collectAsState()
+    val snackbarHostState = LocalSnackbarHostState.current
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-    if (registrationState is UiState.Success && (registrationState as UiState.Success<String>).data.isNotEmpty()) {
-        onNavigateToOtp((registrationState as UiState.Success<String>).data)
+    LaunchedEffect(registrationState) {
+        if (registrationState is UiState.Success) {
+            val result = (registrationState as UiState.Success<RegistrationResult>).data
+            if (result.phone.isNotEmpty()) {
+                onNavigateToOtp(result.phone, result.message)
+            }
+        } else if (registrationState is UiState.Error) {
+            snackbarHostState.showSnackbar((registrationState as UiState.Error).message)
+        }
     }
 
     val divisions by viewModel.divisions.collectAsState()
@@ -293,7 +309,8 @@ fun RegistrationScreen(
                 }
             }
 
-            if (registrationState is UiState.Error) {
+            // We no longer show inline error, because we use a Snackbar for errors
+            /*if (registrationState is UiState.Error) {
                 item {
                     Text(
                         text = (registrationState as UiState.Error).message,
@@ -301,7 +318,7 @@ fun RegistrationScreen(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-            }
+            }*/
 
             item {
                 val isFormValid = name.isNotBlank() && fatherName.isNotBlank() && phone.isNotBlank() && 
@@ -313,29 +330,35 @@ fun RegistrationScreen(
 
                 Button(
                     onClick = {
-                        val request = RegisterRequest(
-                            name = name,
-                            fatherOrHusbandName = fatherName,
-                            phone = phone,
-                            nidNumber = nid,
-                            email = email.ifBlank { null },
-                            gender = gender,
-                            dob = dob,
-                            divisionId = divisionId!!,
-                            districtId = districtId!!,
-                            upazilaId = upazilaId!!,
-                            municipalityId = municipalityId!!,
-                            wardId = wardId!!,
-                            areaId = areaId!!,
-                            holdingNo = holdingNo,
-                            roadNo = roadNo.ifBlank { null },
-                            fullAddress = address.ifBlank { null },
-                            serviceCategoryId = serviceCategoryId!!,
-                            password = password,
-                            passwordConfirmation = retypePassword,
-                            declaration = declaration
-                        )
-                        viewModel.registerCustomer(request)
+                        if (com.birdwastemanagement.app.utils.NetworkUtils.isNetworkAvailable(context)) {
+                            val request = RegisterRequest(
+                                name = name,
+                                fatherOrHusbandName = fatherName,
+                                phone = phone,
+                                nidNumber = nid,
+                                email = email.ifBlank { null },
+                                gender = gender,
+                                dob = dob,
+                                divisionId = divisionId!!,
+                                districtId = districtId!!,
+                                upazilaId = upazilaId!!,
+                                municipalityId = municipalityId!!,
+                                wardId = wardId!!,
+                                areaId = areaId!!,
+                                holdingNo = holdingNo,
+                                roadNo = roadNo.ifBlank { null },
+                                fullAddress = address.ifBlank { null },
+                                serviceCategoryId = serviceCategoryId!!,
+                                password = password,
+                                passwordConfirmation = retypePassword,
+                                declaration = declaration
+                            )
+                            viewModel.registerCustomer(request)
+                        } else {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("No internet connection. Please connect to the internet and try again.")
+                            }
+                        }
                     },
                     enabled = isFormValid && registrationState !is UiState.Loading,
                     shape = RoundedCornerShape(12.dp),

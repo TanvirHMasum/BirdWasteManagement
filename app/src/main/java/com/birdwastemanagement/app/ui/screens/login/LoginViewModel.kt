@@ -36,15 +36,25 @@ class LoginViewModel @Inject constructor(
                 
                 if (response.isSuccessful && response.body() != null) {
                     val loginResponse = response.body()!!
-                    userPreferences.setAuthToken(loginResponse.token)
-                    loginResponse.user?.let { 
-                        userPreferences.saveUserData(it) 
+                    val loginData = loginResponse.data
+                    
+                    if (loginData != null) {
+                        userPreferences.setAuthToken(loginData.token)
+                        loginData.user?.let { 
+                            userPreferences.saveUserData(it) 
+                        }
+                        userPreferences.setLoggedIn(true)
+                        _loginState.value = UiState.Success(true)
+                    } else {
+                        _loginState.value = UiState.Error(loginResponse.message ?: "Login failed: No data received")
                     }
-                    userPreferences.setLoggedIn(true)
-                    _loginState.value = UiState.Success(true)
                 } else {
                     _loginState.value = UiState.Error("Login failed: ${response.message()}")
                 }
+            } catch (e: java.net.UnknownHostException) {
+                _loginState.value = UiState.Error("No internet connection. Please connect to the internet and try again.")
+            } catch (e: java.net.ConnectException) {
+                _loginState.value = UiState.Error("No internet connection. Please connect to the internet and try again.")
             } catch (e: Exception) {
                 _loginState.value = UiState.Error(e.localizedMessage ?: "An error occurred")
             }

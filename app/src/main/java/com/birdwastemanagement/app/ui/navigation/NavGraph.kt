@@ -19,10 +19,19 @@ import com.birdwastemanagement.app.ui.screens.splash.SplashScreen
 
 sealed class Screen(val route: String) {
     object Splash : Screen("splash")
-    object Login : Screen("login")
+    object Login : Screen("login?message={message}") {
+        fun createRoute(message: String? = null): String {
+            if (message == null) return "login"
+            val encodedMessage = java.net.URLEncoder.encode(message, "UTF-8")
+            return "login?message=$encodedMessage"
+        }
+    }
     object Registration : Screen("registration")
-    object Otp : Screen("otp/{phone}") {
-        fun createRoute(phone: String) = "otp/$phone"
+    object Otp : Screen("otp/{phone}?message={message}") {
+        fun createRoute(phone: String, message: String): String {
+            val encodedMessage = java.net.URLEncoder.encode(message, "UTF-8")
+            return "otp/$phone?message=$encodedMessage"
+        }
     }
     object Dashboard : Screen("dashboard")
     object CustomerDetails : Screen("customer_details/{customerId}") {
@@ -50,7 +59,7 @@ fun AppNavGraph(
         composable(Screen.Splash.route) {
             SplashScreen(
                 onNavigateToLogin = {
-                    navController.navigate(Screen.Login.route) {
+                    navController.navigate(Screen.Login.createRoute(null)) {
                         popUpTo(Screen.Splash.route) { inclusive = true }
                     }
                 },
@@ -62,8 +71,21 @@ fun AppNavGraph(
             )
         }
 
-        composable(Screen.Login.route) {
+        composable(
+            route = Screen.Login.route,
+            arguments = listOf(
+                navArgument("message") { 
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
+            val rawMessage = backStackEntry.arguments?.getString("message")
+            val message = rawMessage?.let { java.net.URLDecoder.decode(it, "UTF-8") }
+            
             LoginScreen(
+                message = message,
                 onLoginSuccess = {
                     navController.navigate(Screen.Dashboard.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
@@ -78,22 +100,33 @@ fun AppNavGraph(
         composable(Screen.Registration.route) {
             RegistrationScreen(
                 onBackClick = { navController.popBackStack() },
-                onNavigateToOtp = { phone ->
-                    navController.navigate(Screen.Otp.createRoute(phone))
+                onNavigateToOtp = { phone, message ->
+                    navController.navigate(Screen.Otp.createRoute(phone, message))
                 }
             )
         }
 
         composable(
             route = Screen.Otp.route,
-            arguments = listOf(navArgument("phone") { type = NavType.StringType })
+            arguments = listOf(
+                navArgument("phone") { type = NavType.StringType },
+                navArgument("message") { 
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
         ) { backStackEntry ->
             val phone = backStackEntry.arguments?.getString("phone") ?: ""
+            val rawMessage = backStackEntry.arguments?.getString("message")
+            val message = rawMessage?.let { java.net.URLDecoder.decode(it, "UTF-8") }
+            
             OtpScreen(
                 phone = phone,
+                message = message,
                 onBackClick = { navController.popBackStack() },
-                onVerifySuccess = {
-                    navController.navigate(Screen.Dashboard.route) {
+                onVerifySuccess = { successMessage ->
+                    navController.navigate(Screen.Login.createRoute(successMessage)) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 }

@@ -14,4 +14,10 @@ interface AuthApi {
 
     @POST("v1/auth/register")
     suspend fun register(@Body request: RegisterRequest): Response<RegisterResponse>
+
+    @POST("v1/auth/verify-registration-otp")
+    suspend fun verifyOtp(@Body request: com.birdwastemanagement.app.data.remote.dto.VerifyOtpRequest): Response<com.birdwastemanagement.app.data.remote.dto.BaseResponse>
+
+    @POST("v1/auth/resend-registration-otp")
+    suspend fun resendOtp(@Body request: com.birdwastemanagement.app.data.remote.dto.ResendOtpRequest): Response<com.birdwastemanagement.app.data.remote.dto.BaseResponse>
 }

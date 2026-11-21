@@ -14,18 +14,69 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.birdwastemanagement.app.ui.theme.DeepForestGreen
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.birdwastemanagement.app.domain.model.UiState
+import com.birdwastemanagement.app.ui.utils.LocalSnackbarHostState
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OtpScreen(
     phone: String,
+    message: String? = null,
     onBackClick: () -> Unit,
-    onVerifySuccess: () -> Unit,
-    modifier: Modifier = Modifier
+    onVerifySuccess: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: OtpViewModel = hiltViewModel()
 ) {
+    val verifyState by viewModel.verifyState.collectAsState()
+    val resendState by viewModel.resendState.collectAsState()
+    val snackbarHostState = LocalSnackbarHostState.current
+
+    LaunchedEffect(verifyState) {
+        if (verifyState is UiState.Success && (verifyState as UiState.Success<String>).data.isNotEmpty()) {
+            onVerifySuccess((verifyState as UiState.Success<String>).data)
+        } else if (verifyState is UiState.Error) {
+            snackbarHostState.showSnackbar("[ERROR]${(verifyState as UiState.Error).message}")
+        }
+    }
+
+    LaunchedEffect(resendState) {
+        if (resendState is UiState.Success && (resendState as UiState.Success<String>).data.isNotEmpty()) {
+            snackbarHostState.showSnackbar("[SUCCESS]${(resendState as UiState.Success<String>).data}")
+        } else if (resendState is UiState.Error) {
+            snackbarHostState.showSnackbar("[ERROR]${(resendState as UiState.Error).message}")
+        }
+    }
+
     var otpCode by remember { mutableStateOf("") }
     var timeLeft by remember { mutableIntStateOf(120) }
+    var showDialog by remember { mutableStateOf(message != null) }
+
+    if (showDialog && message != null) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { 
+                Text(
+                    text = "Success",
+                    color = DeepForestGreen,
+                    fontWeight = FontWeight.Bold
+                ) 
+            },
+            text = { 
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodyMedium
+                ) 
+            },
+            confirmButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("OK", color = DeepForestGreen, fontWeight = FontWeight.Bold)
+                }
+            }
+        )
+    }
 
     LaunchedEffect(key1 = timeLeft) {
         if (timeLeft > 0) {
@@ -92,16 +143,31 @@ fun OtpScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            val context = androidx.compose.ui.platform.LocalContext.current
+            val scope = rememberCoroutineScope()
+
             Button(
-                onClick = onVerifySuccess,
-                enabled = otpCode.length == 6,
+                onClick = { 
+                    if (com.birdwastemanagement.app.utils.NetworkUtils.isNetworkAvailable(context)) {
+                        viewModel.verifyOtp(phone, otpCode)
+                    } else {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("[ERROR]No internet connection. Please connect to the internet and try again.")
+                        }
+                    }
+                },
+                enabled = otpCode.length == 6 && verifyState !is UiState.Loading,
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = DeepForestGreen),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp)
             ) {
-                Text(text = "Verify OTP", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                if (verifyState is UiState.Loading) {
+                    CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+                } else {
+                    Text(text = "Verify OTP", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -113,8 +179,24 @@ fun OtpScreen(
                     color = Color.Gray
                 )
             } else {
-                TextButton(onClick = { timeLeft = 120 }) {
-                    Text("Resend OTP", color = DeepForestGreen, fontWeight = FontWeight.Bold)
+                TextButton(
+                    onClick = { 
+                        if (com.birdwastemanagement.app.utils.NetworkUtils.isNetworkAvailable(context)) {
+                            viewModel.resendOtp(phone)
+                            timeLeft = 120
+                        } else {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("[ERROR]No internet connection. Please connect to the internet and try again.")
+                            }
+                        }
+                    },
+                    enabled = resendState !is UiState.Loading
+                ) {
+                    if (resendState is UiState.Loading) {
+                        CircularProgressIndicator(color = DeepForestGreen, modifier = Modifier.size(24.dp))
+                    } else {
+                        Text("Resend OTP", color = DeepForestGreen, fontWeight = FontWeight.Bold)
+                    }
                 }
             }
         }
